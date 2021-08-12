@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "fastify": "^3.20.1",
+    "fastify-appwrite": "^1.0.1",
+    "fastify-swagger": "^4.8.4",
+    "nodemon": "^2.0.12"
+  }
+}

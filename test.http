@@ -1,0 +1,30 @@
+### GET ALL ITEMS
+
+GET http://localhost:5000/users HTTP/1.1
+
+### GET SINGLE USER
+GET http://localhost:5000/users/61158b6b2e544 HTTP/1.1
+
+
+### CREATE USER
+POST http://localhost:5000/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "xwfdd@gmail.com",
+    "password": "Zamanie93"
+}
+
+
+### DELETE USER
+DELETE http://localhost:5000/users/61157c02443d9 HTTP/1.1
+
+
+### UPATE ITEM
+PUT http://localhost:5000/items/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Updated Item"
+}
+
