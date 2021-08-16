@@ -50,14 +50,58 @@ const getUsersOpts = {
   },
 };
 
-async function userRoutes(fastify, opts) {
-  await fastify.client
-    .setEndpoint("http://localhost:4003/v1")
-    .setProject("611274fe2b683")
-    .setKey(
-      "85dfd135face9124586ac3ece5b5ed6452f304f95a0f24e3022a57d0818d4ae5c171dd85e367ab32c606344b2b927e31cf596b59d069ae9b34120c36642d7a0df6730e3b82638d7967586ee2a8ed59f9db67dc4ec3e64d3067f6e9000799275f3bdbdb65d5bf0b54ddd31facaeb77bea62d0a5974a647587bbcc785e7f81935f"
-    );
+// Get users log Schema
+const getUserLogsOpts = {
+  schema: {
+    response: {
+      200: {
+        type: "object",
+        properties: {
+          logs: { type: "array" },
+        },
+      },
+    },
+  },
+};
 
+// Get users prefs Schema
+const getUserPrefsOpts = {
+  schema: {
+    response: {
+      200: {
+        type: "object",
+      },
+    },
+  },
+};
+
+// Update user prefs Schema
+const updateUserPrefsOpts = {
+  schema: {
+    body: {
+      type: "object",
+    },
+    response: {
+      200: {
+        type: "object",
+      },
+    },
+  },
+};
+
+// Get users log Schema
+const getUserSessionsOpts = {
+  schema: {
+    response: {
+      200: {
+        type: "object",
+      },
+    },
+  },
+};
+
+async function userRoutes(fastify, opts) {
+ 
   /**
    * List Users
    *
@@ -124,6 +168,74 @@ async function userRoutes(fastify, opts) {
     const result = await fastify.user.delete(id);
     reply.code(result.status).send(result.data);
   });
+
+  /**
+   * Get User Logs
+   *
+   * Get a user activity logs list by its unique ID.
+   *
+   * @param {string} userId
+   */
+  fastify.get("/users/:id/logs", getUserLogsOpts, async (req, reply) => {
+    const { id } = req.params;
+    const result = await fastify.user.getLogs(id);
+    if (result.status != 200) {
+      return reply.code(result.status).send(result.data);
+    }
+    reply.code(result.status).send(result.response);
+  });
+
+  /**
+   * Get User Preferences
+   *
+   * Get the user preferences by its unique ID.
+   *
+   * @param {string} userId
+   */
+  fastify.get("/users/:id/prefs", getUserPrefsOpts, async (req, reply) => {
+    const { id } = req.params;
+    const result = await fastify.user.getPrefs(id);
+    if (result.status != 200) {
+      return reply.code(result.status).send(result.data);
+    }
+    reply.code(result.status).send(result.response);
+  });
+
+  /**
+   * Get User Preferences
+   *
+   * Get the user preferences by its unique ID.
+   *
+   * @param {string} userId
+   */
+  fastify.patch("/users/:id/prefs", updateUserPrefsOpts, async (req, reply) => {
+    const { id, prefs } = req.params;
+    const result = await fastify.user.getPrefs(id, prefs);
+    if (result.status != 200) {
+      return reply.code(result.status).send(result.data);
+    }
+    reply.code(result.status).send(result.response);
+  });
+
+  /**
+   * Get User Sessions
+   *
+   * Get the user sessions list by its unique ID.
+   *
+   * @param {string} userId
+   */
+  fastify.get(
+    "/users/:id/sessions",
+    getUserSessionsOpts,
+    async (req, reply) => {
+      const { id } = req.params;
+      const result = await fastify.user.getSessions(id);
+      if (result.status != 200) {
+        return reply.code(result.status).send(result.data);
+      }
+      reply.code(result.status).send(result.response);
+    }
+  );
 }
 
 module.exports = userRoutes;
